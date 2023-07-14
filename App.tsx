@@ -3,9 +3,10 @@ import { View, StyleSheet, Platform } from 'react-native';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
+import { NavigationContainer } from '@react-navigation/native';
 
 import Router from './src/Router';
-import { NavigationContainer } from '@react-navigation/native';
+import AuthProvider from './src/contexts/AuthContext';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -27,9 +28,12 @@ export default function App() {
   if (!fontsLoaded) return null;
   return (
     <NavigationContainer>
-      <View onLayout={onLayoutRootView} style={styles.container}>
-        <Router />
-      </View>
+
+      <AuthProvider>
+        <View onLayout={onLayoutRootView} style={styles.container}>
+          <Router />
+        </View>
+      </AuthProvider>
       <StatusBar style='light' />
     </NavigationContainer>
   );
@@ -39,6 +43,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: Platform.OS === 'android' ? 38 : 0,
-    backgroundColor: '#0E0E0E'
+    backgroundColor: '#0E0E0E',
   },
 });

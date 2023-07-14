@@ -1,15 +1,17 @@
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import AuthProvider from "./contexts/AuthContext";
 import Login from './screens/Login';
 import Home from './screens/Home';
+import { useAuthContext } from './contexts/AuthContext';
 
 const Stack = createNativeStackNavigator();
 
 export default function Router() {
+    const { isLogged } = useAuthContext();
+
     return (
-        <AuthProvider>
-            <Stack.Navigator>
+        <Stack.Navigator>
+            {isLogged ? (
                 <Stack.Screen
                     name='Home'
                     component={Home}
@@ -17,6 +19,7 @@ export default function Router() {
                         headerShown: false,
                     }}
                 />
+            ) : (
                 <Stack.Screen
                     name='Login'
                     component={Login}
@@ -24,7 +27,7 @@ export default function Router() {
                         headerShown: false,
                     }}
                 />
-            </Stack.Navigator>
-        </AuthProvider>
+            )}
+        </Stack.Navigator>
     );
 }

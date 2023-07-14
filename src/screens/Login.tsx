@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
     View,
     Text,
@@ -13,6 +13,8 @@ import {
 import { Feather } from '@expo/vector-icons';
 
 import { useAuthContext } from '../contexts/AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { handlerAuth } from '../services/api';
 
 export default function Login() {
     const {
@@ -21,7 +23,27 @@ export default function Login() {
         email,
         handlerLogin,
         password,
+        errorMessage,
+        changeLoggedStatus,
+        changeToken,
     } = useAuthContext();
+
+    // useEffect(() => {
+    //     const getData = async () => {
+    //         try {
+    //             const value = await AsyncStorage.getItem('token');
+    //             if (value !== null) {
+    //                 const result = await handlerAuth(value);
+    //                 changeLoggedStatus(result);
+    //                 if (result) changeToken(value);
+    //             }
+    //         } catch (e) {
+    //             console.log(e);
+    //         }
+    //     }
+
+    //     getData();
+    // }, [])
 
     return (
         <KeyboardAvoidingView
@@ -64,6 +86,13 @@ export default function Login() {
                             />
                         </View>
                     </View>
+
+                    {errorMessage !== '' && (
+                        <Text style={styles.error}>
+                            {errorMessage}
+                        </Text>
+                    )}
+
                     <TouchableOpacity
                         style={styles.button}
                         onPress={handlerLogin}
@@ -84,6 +113,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         justifyContent: 'space-evenly',
+        backgroundColor: '#0E0E0E',
     },
     logo: {
         width: '100%',
@@ -136,4 +166,8 @@ const styles = StyleSheet.create({
         letterSpacing: 0.5,
         color: "#0E0E0E"
     },
+    error: {
+        fontFamily: 'Inter500',
+        color: '#f53c3c'
+    }
 });

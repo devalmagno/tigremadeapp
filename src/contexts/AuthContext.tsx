@@ -1,5 +1,13 @@
-import { ReactNode, createContext, useContext, useState } from "react";
+import {
+    ReactNode,
+    createContext,
+    useContext,
+    useEffect,
+    useState,
+} from "react";
 import { encode } from 'base-64';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 import { handlerAuth } from "../services/api";
 
 interface AuthContextType {
@@ -8,8 +16,11 @@ interface AuthContextType {
     password: string;
     changePassword: (value: string) => void;
     token: string;
+    changeToken: (value: string) => void;
     handlerLogin: () => void;
     isLogged: boolean;
+    changeLoggedStatus: (value: boolean) => void;
+    errorMessage: string;
 }
 
 interface Props {
@@ -32,19 +43,54 @@ export default function AuthProvider(props: Props) {
     const [password, setPassword] = useState('');
     const [token, setToken] = useState('');
     const [isLogged, setIsLogged] = useState(false);
+    const [errorMessage, setErrorMessage] = useState('');
 
-    const changeEmail = (value: string) => { setEmail(value) }
-    const changePassword = (value: string) => { setPassword(value) }
+    const changeEmail = (value: string) => { setEmail(value) };
+    const changePassword = (value: string) => { setPassword(value) };
+    const changeToken = (value: string) => { setToken(`Basic ${value}`) };
+    const changeLoggedStatus = (value: boolean) => { setIsLogged(value) };
+
+    const storeData = async (value: string) => {
+        try {
+            await AsyncStorage.setItem('token', value);
+        } catch (e) {
+            console.log(e);
+        }
+    }
 
     async function handlerLogin() {
         if (email === '' || password === '') return;
         const credentials = `${email}:${password}`;
         const encodedCredentials = encode(credentials);
-        setToken(`Basic ${encodedCredentials}`);
+        changeToken(encodedCredentials);
 
-        const result = await handlerAuth(token);
-        setIsLogged(result);
+        const result = await handlerAuth(`Basic ${encodedCredentials}`);
+
+        if (!result) setErrorMessage("O e-mail ou a senha inserida pode está incorreta.")
+        if (result) {
+            if (errorMessage !== '')
+                setErrorMessage('');
+            await storeData(`Basic ${encodedCredentials}`);
+            setIsLogged(result);
+        }
     }
+
+    useEffect(() => {
+        const getData = async () => {
+            try {
+                const value = await AsyncStorage.getItem('token');
+                if (value !== null) {
+                    const result = await handlerAuth(value);
+                    changeLoggedStatus(result);
+                    if (result) changeToken(value);
+                }
+            } catch (e) {
+                console.log(e);
+            }
+        }
+
+        getData();
+    }, [])
 
     return (
         <AuthContext.Provider
@@ -55,7 +101,10 @@ export default function AuthProvider(props: Props) {
                 password,
                 changeEmail,
                 changePassword,
-                handlerLogin
+                handlerLogin,
+                errorMessage,
+                changeLoggedStatus,
+                changeToken
             }}
         >
             {props.children}
