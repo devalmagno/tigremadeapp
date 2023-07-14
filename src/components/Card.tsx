@@ -31,14 +31,14 @@ export default function Card() {
                 <Pressable
                     style={styles.link}
                 >
-                    <FontAwesome5 name="rss" size={20} color="black" />
+                    <FontAwesome5 name="rss" size={16} color="black" />
                     <Text style={styles.linkTitle}>RSS Feed</Text>
                 </Pressable>
 
                 <Pressable
                     style={styles.link}
                 >
-                    <FontAwesome5 name="telegram" size={20} color="black" />
+                    <FontAwesome5 name="telegram" size={16} color="black" />
                     <Text style={styles.linkTitle}>Grupo do Telegram</Text>
                 </Pressable>
             </View>

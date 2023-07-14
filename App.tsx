@@ -2,6 +2,7 @@ import { useCallback } from 'react';
 import { View, StyleSheet, Platform } from 'react-native';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
+import { StatusBar } from 'expo-status-bar';
 
 import Router from './src/Router';
 import { NavigationContainer } from '@react-navigation/native';
@@ -29,6 +30,7 @@ export default function App() {
       <View onLayout={onLayoutRootView} style={styles.container}>
         <Router />
       </View>
+      <StatusBar style='light' />
     </NavigationContainer>
   );
 }
