@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons';
 
 import Header from '../components/Header';
 import Title from '../components/Title';
+import SettingsContainer from '../components/SettingsContainer';
 
 export default function Settings() {
     return (
@@ -18,6 +19,8 @@ export default function Settings() {
                     <Ionicons name="ios-settings-outline" size={20} color="#fff" />
                 }
             />
+
+            <SettingsContainer />
         </View>
     );
 }

@@ -21,6 +21,7 @@ interface AuthContextType {
     isLogged: boolean;
     changeLoggedStatus: (value: boolean) => void;
     errorMessage: string;
+    handlerLogout: () => void;
 }
 
 interface Props {
@@ -58,6 +59,12 @@ export default function AuthProvider(props: Props) {
         }
     }
 
+    async function handlerLogout() {
+        await AsyncStorage.removeItem('token');
+        setToken('');
+        setIsLogged(false);
+    }
+
     async function handlerLogin() {
         if (email === '' || password === '') return;
         const credentials = `${email}:${password}`;
@@ -70,7 +77,7 @@ export default function AuthProvider(props: Props) {
         if (result) {
             if (errorMessage !== '')
                 setErrorMessage('');
-            await storeData(`Basic ${encodedCredentials}`);
+            await storeData(encodedCredentials);
             setIsLogged(result);
         }
     }
@@ -80,7 +87,7 @@ export default function AuthProvider(props: Props) {
             try {
                 const value = await AsyncStorage.getItem('token');
                 if (value !== null) {
-                    const result = await handlerAuth(value);
+                    const result = await handlerAuth(`Basic ${value}`);
                     changeLoggedStatus(result);
                     if (result) changeToken(value);
                 }
@@ -104,7 +111,8 @@ export default function AuthProvider(props: Props) {
                 handlerLogin,
                 errorMessage,
                 changeLoggedStatus,
-                changeToken
+                changeToken,
+                handlerLogout,
             }}
         >
             {props.children}

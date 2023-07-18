@@ -1,11 +1,14 @@
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, FlatList } from 'react-native';
 import { Feather } from '@expo/vector-icons';
 
 import Card from '../components/Card';
 import Header from '../components/Header';
 import Title from '../components/Title';
+import { useDataContext } from '../contexts/DataContext';
 
 export default function MyPodcasts() {
+    const { podcastList } = useDataContext();
+
     return (
         <View style={styles.container}>
             <Header />
@@ -15,7 +18,12 @@ export default function MyPodcasts() {
                     <Feather name="headphones" size={20} color="#fff" />
                 }
             />
-            <Card />
+
+            <FlatList
+                data={podcastList}
+                renderItem={({ item }) => <Card podcast={item} />}
+                keyExtractor={item => item.title}
+            />
         </View>
     )
 }

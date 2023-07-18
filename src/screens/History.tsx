@@ -7,6 +7,7 @@ import { FontAwesome5 } from '@expo/vector-icons';
 
 import Title from '../components/Title';
 import Header from '../components/Header';
+import HistoryContainer from '../components/HistoryContainer';
 
 export default function History() {
     return (
@@ -18,6 +19,8 @@ export default function History() {
                     <FontAwesome5 name="history" size={20} color="#fff" />
                 }
             />
+
+            <HistoryContainer />
         </View>
     );
 }

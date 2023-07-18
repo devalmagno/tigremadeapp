@@ -6,27 +6,53 @@ import {
     TouchableOpacity,
     Pressable,
 } from 'react-native';
-import { FontAwesome5 } from '@expo/vector-icons';
+import { FontAwesome5, MaterialIcons } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
 
-export default function Card() {
+import { PodcastType } from '../types/PodcastType';
+import { PodcastNavigationProp } from '../Router';
+
+interface Props {
+    podcast: PodcastType;
+}
+
+export default function Card(props: Props) {
+    const navigation = useNavigation<PodcastNavigationProp>();
+
+    function handlerNavigation() {
+        navigation.navigate('PodcastScreen', {
+            podcast: props.podcast,
+        });
+    }
+
     return (
         <View style={styles.container}>
             <TouchableOpacity
                 style={styles.card}
+                onPress={handlerNavigation}
             >
                 <View style={styles.banner}>
-                    <Image
-                        source={require('../../assets/images/banner.png')}
-                        style={styles.image}
-                    />
+                    {props.podcast.image !== '' ? (
+                        <Image
+                            source={{
+                                uri: props.podcast.image,
+                            }}
+                            style={styles.image}
+                        />
+
+                    ) : (
+                        <View style={styles.image}>
+                            <MaterialIcons name="image" size={24} color="#717171" />
+                        </View>
+                    )}
                 </View>
                 <View style={styles.info}>
                     <Text style={styles.subtitle}>
-                        52 episódios • Quinzenalmente aos sábados
+                        {props.podcast.episodes.length} episódios • {props.podcast.copyright}
                     </Text>
-                    <Text style={styles.title}>Tarja Preta FM</Text>
+                    <Text style={styles.title}>{props.podcast.title}</Text>
                 </View>
-            </TouchableOpacity>
+            </TouchableOpacity >
             <View style={styles.linkContainer}>
                 <Pressable
                     style={styles.link}
@@ -42,7 +68,7 @@ export default function Card() {
                     <Text style={styles.linkTitle}>Grupo do Telegram</Text>
                 </Pressable>
             </View>
-        </View>
+        </View >
     );
 }
 
@@ -52,6 +78,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 8,
         borderTopRightRadius: 8,
         overflow: 'hidden',
+        marginBottom: 20,
     },
     card: {
         backgroundColor: '#242424',
@@ -61,6 +88,9 @@ const styles = StyleSheet.create({
     },
     image: {
         width: '100%',
+        resizeMode: 'cover',
+        height: 164,
+        backgroundColor: '#F0F0F0',
     },
     info: {
         gap: 10,
