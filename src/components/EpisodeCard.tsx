@@ -6,17 +6,36 @@ import {
     TouchableOpacity,
 } from 'react-native';
 import { Feather } from '@expo/vector-icons';
+import { useNavigation } from '@react-navigation/native';
+
+import { usePlayerContext } from '../contexts/PlayerContext';
+
 import { EpisodeType } from '../types/PodcastType';
 
 interface Props {
     episode: EpisodeType;
     image: string;
+    title: string;
 }
 
 export default function EpisodeCard(props: Props) {
+    const { setEpisode, setTitle, setImage, episode } = usePlayerContext();
+
+    const navigation = useNavigation();
+
+    function handlerNavigation() {
+        if (episode !== props.episode) {
+            setEpisode(props.episode);
+            setTitle(props.title);
+            setImage(props.image);
+        }
+
+        navigation.navigate('Player' as never);
+    }
+
     return (
         <View style={styles.container}>
-            <TouchableOpacity style={styles.column}>
+            <TouchableOpacity style={styles.column} onPress={handlerNavigation}>
                 <Text style={styles.title}>{props.episode.title}</Text>
                 <View style={styles.row}>
                     <Image

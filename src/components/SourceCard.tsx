@@ -17,7 +17,7 @@ interface Props {
 }
 
 export default function SourceCard(props: Props) {
-    const { podcastsSource, setPodcastsSource, getPodcastData } = useDataContext();
+    const { podcastsSource, setPodcastsSource, getPodcastData, removePodcast } = useDataContext();
     const { token } = useAuthContext();
 
     function handlerSwitch(value: boolean) {
@@ -39,6 +39,8 @@ export default function SourceCard(props: Props) {
 
         if (value)
             getPodcastData(source.rss, token);
+        else 
+            removePodcast(source.rss);
     }
 
     return (
