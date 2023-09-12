@@ -24,10 +24,12 @@
       },
       "permissions": [
         "android.permission.FOREGROUND_SERVICE"
-      ]
+      ],
+      "package": "com.devalmagno.tigremadeapp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": []
   }
 }

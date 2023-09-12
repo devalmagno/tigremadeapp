@@ -80,6 +80,8 @@ export default function PlayerProvider(props: Props) {
 
     const [sound, setSound] = useState<Audio.Sound | null>(null);
 
+
+
     async function playSound() {
         if (currentPlaying !== episode!.url) {
             await unloadingSound();
@@ -154,7 +156,6 @@ export default function PlayerProvider(props: Props) {
         if (!isAudioPlaying) clearInterval(interval);
 
         getAudioInfo();
-
     }, [sound]);
 
     useEffect(() => {
